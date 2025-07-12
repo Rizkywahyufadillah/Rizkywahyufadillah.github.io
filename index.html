@@ -1,58 +1,66 @@
-
-
 <!DOCTYPE html>
 <html>
 
 <head>
-    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
-    <script
-        src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
-    <script
-        src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+    <title>AR Birthday Greetings - Choose Your Experience</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #FF69B4;
+            /* Pink */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #FF1493;
+            /* Deeper Pink */
+        }
+    </style>
 </head>
 
-<body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs>
-        <a-marker preset="hiro" id="hiro-marker">
-            <a-entity gltf-model="url(assets/leopard_animation_run.glb)" scale="0.02 0.02 0.02" position="0 0 0"
-                rotation="90 -90 90" animation-mixer="loop: repeat; crossFadeDuration: 1">
-            </a-entity>
-
-            <a-entity gltf-model="url(assets/animated_dragon_three_motion_loops.glb)" scale="0.9 0.9 0.9"
-                position="3.7 -3 0" rotation="20 280 90"
-                animation-mixer="loop: repeat; crossFadeDuration: 1; timeScale: 1.5;">
-            </a-entity>
-
-            <a-entity position="10 15 0" rotation="20 280 90">
-                <a-entity gltf-model="url(assets/lightning_flash_propagation.glb)" scale="3 3 3"
-                    animation-mixer="clip: lightning; loop: repeat; timeScale: 1.5;">
-                </a-entity>
-            </a-entity>
-
-
-            <a-sound id="audio_project" src="url(assets/dragon-roar-87519.mp3)" autoplay="false" loop="true"
-                volume="1.0"></a-sound>
-        </a-marker>
-
-        <a-entity camera></a-entity>
-    </a-scene>
-
-
-
-    <script>
-        var marker = document.querySelector('#hiro-marker');
-        var sound = document.querySelector('#audio_project');
-
-        marker.addEventListener('markerFound', function () {
-            sound.components.sound.playSound();
-        });
-
-        marker.addEventListener('markerLost', function () {
-            sound.components.sound.stopSound();
-        });
-    </script>
+<body>
+    <div class="container">
+        <h1>Welcome to AR Birthday Greetings!</h1>
+        <p>Choose an Augmented Reality experience to send a special birthday wish.</p>
+        <a href="birthday-surprise.html" class="button">Launch Birthday Surprise AR</a>
+    </div>
 </body>
 
 </html>

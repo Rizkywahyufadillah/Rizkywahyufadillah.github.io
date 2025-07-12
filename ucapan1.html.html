@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+</head>
+
+<body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs>
+        <a-marker preset="hiro">
+            <!-- Model hati -->
+            <a-entity gltf-model="url(assets/heart.glb)" scale="1 1 1" position="0 0 0" rotation="0 180 0">
+            </a-entity>
+
+            <!-- Teks ucapan -->
+            <a-text value="Selamat Ulang Tahun, Sayang!" position="0 1 0" align="center" color="red" scale="2 2 2">
+            </a-text>
+        </a-marker>
+
+        <a-entity camera></a-entity>
+    </a-scene>
+</body>
+
+</html>
