@@ -5,65 +5,69 @@
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
-    <script
-        src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
-    <script
-        src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
 </head>
 
 <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs>
+    <a-scene embedded arjs renderer="logarithmicDepthBuffer: true;">
         <!-- Marker -->
         <a-marker preset="hiro" id="hiro-marker">
             <!-- Leopard -->
-            <a-entity id="dragon-model" gltf-model="url(assets/leopard_animation_run.glb)" scale="0.02 0.02 0.02" position="0 0 0"
-                rotation="90 -90 90" animation-mixer="loop: repeat; crossFadeDuration: 1">
+            <a-entity id="leopard" class="clickable" gltf-model="url(assets/leopard_animation_run.glb)"
+                scale="0.05 0.05 0.05" position="0 0.5 0" rotation="90 -90 90" animation-mixer
+                data-role="clickable-object">
+                <!-- Bounding box helper (tidak terlihat di produksi) -->
+                <a-box visible="false" width="2" height="2" depth="2" wireframe="true" color="red"></a-box>
             </a-entity>
 
-            <!-- Dragon with clickable class and id -->
-            <a-entity 
-                gltf-model="url(assets/animated_dragon_three_motion_loops.glb)" scale="0.9 0.9 0.9" position="3.7 -3 0"
-                rotation="20 280 90" animation-mixer="loop: repeat; crossFadeDuration: 1; timeScale: 1.5;">
+            <!-- Dragon -->
+            <a-entity gltf-model="url(assets/animated_dragon_three_motion_loops.glb)" position="3 0 0"
+                scale="0.5 0.5 0.5" rotation="0 180 0">
             </a-entity>
 
-            <!-- Lightning -->
-            <a-entity position="10 15 0" rotation="20 280 90">
-                <a-entity gltf-model="url(assets/lightning_flash_propagation.glb)" scale="3 3 3"
-                    animation-mixer="clip: lightning; loop: repeat; timeScale: 1.5;">
-                </a-entity>
-            </a-entity>
-
-            <!-- Sound -->
-            <a-sound id="audio_project" src="url(assets/dragon-roar-87519.mp3)" autoplay="false" loop="true"
-                volume="1.0">
-            </a-sound>
+            <!-- Teks ucapan -->
+            <a-text id="ucapan-text" value="" position="0 1.5 0" align="center" color="yellow" width="4"
+                visible="false">
+            </a-text>
         </a-marker>
 
-        <!-- Camera and Cursor -->
+        <!-- Kamera -->
         <a-entity camera look-controls>
-            <a-cursor fuse="false" raycaster="objects: .clickable" material="color: white; shader: flat">
+            <a-cursor fuse="true" fuse-timeout="1000"
+                raycaster="objects: [data-role=clickable-object], .clickable; far: 20; interval: 100"
+                cursor="rayOrigin: mouse">
             </a-cursor>
         </a-entity>
     </a-scene>
 
-    <!-- Script -->
     <script>
-        var marker = document.querySelector('#hiro-marker');
-        var sound = document.querySelector('#audio_project');
-        var dragon = document.querySelector('#dragon-model');
+        document.addEventListener('DOMContentLoaded', () => {
+            const leopard = document.querySelector('#leopard');
+            const ucapanText = document.querySelector('#ucapan-text');
+            let alreadyClicked = false;
 
-        // Main sound control
-        marker.addEventListener('markerFound', function () {
-            sound.components.sound.playSound();
-        });
+            leopard.addEventListener('click', (e) => {
+                e.stopPropagation();
 
-        marker.addEventListener('markerLost', function () {
-            sound.components.sound.stopSound();
-        });
+                // Pertama kali diklik → tampilkan teks
+                if (!alreadyClicked) {
+                    alreadyClicked = true;
 
-        // Redirect when dragon is clicked
-        dragon.addEventListener('click', function () {
-            window.location.href = 'ucapan1.html';
+                    ucapanText.setAttribute('value', 'Selamat Ulang Tahun!');
+                    ucapanText.setAttribute('visible', 'true');
+
+                    // Animasi skala membesar
+                    // leopard.setAttribute('scale', '0.35 0.35 0.35');
+                    setTimeout(() => {
+                        // leopard.setAttribute('scale', '0.3 0.3 0.3');
+                    }, 300);
+                } else {
+                    // Klik kedua → pindah halaman
+                    // leopard.setAttribute('scale', '0.35 0.35 0.35');
+                    setTimeout(() => {
+                        window.location.href = 'ucapan1.html';
+                    }, 300);
+                }
+            });
         });
     </script>
 </body>
