@@ -2,65 +2,61 @@
 <html>
 
 <head>
-    <title>AR Birthday Greetings - Choose Your Experience</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            text-align: center;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 90%;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        p {
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 12px 25px;
-            background-color: #FF69B4;
-            /* Pink */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: #FF1493;
-            /* Deeper Pink */
-        }
-    </style>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
 </head>
 
-<body>
-    <div class="container">
-        <h1>Welcome to AR Birthday Greetings! 2</h1>
-        <p>Choose an Augmented Reality experience to send a special birthday wish.</p>
-        <a href="birthday-surprise.html" class="button">Launch Birthday Surprise AR</a>
-    </div>
+<body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs renderer="logarithmicDepthBuffer: true;">
+        <!-- Marker -->
+        <a-marker preset="hiro" id="hiro-marker">
+            <!-- Leopard -->
+            <a-entity id="leopard" class="clickable" gltf-model="url(assets/leopard_animation_run.glb)"
+                scale="0.05 0.05 0.05" position="0 0.5 0" rotation="90 -90 90" animation-mixer
+                data-role="clickable-object">
+            </a-entity>
+
+            <!-- Hitbox transparan (posisi sama seperti leopard) -->
+            <a-box id="leopard-hitbox" position="0 1 0" width="1" height="2" depth="1"
+                material="opacity: 0; transparent: true" class="clickable">
+            </a-box>
+
+            <!-- Dragon -->
+            <a-entity gltf-model="url(assets/animated_dragon_three_motion_loops.glb)" position="3 0 0"
+                scale="0.5 0.5 0.5" rotation="0 180 0">
+            </a-entity>
+
+            <!-- Teks ucapan -->
+            <a-text id="ucapan-text" value="" position="0 1.5 0" align="center" color="yellow" width="4"
+                visible="false">
+            </a-text>
+        </a-marker>
+
+        <!-- Kamera + cursor -->
+        <a-entity camera raycaster="objects: .clickable; far: 20; interval: 100" cursor="rayOrigin: mouse">
+        </a-entity>
+    </a-scene>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hitbox = document.querySelector('#leopard-hitbox');
+            const ucapanText = document.querySelector('#ucapan-text');
+            let clicked = false;
+
+            hitbox.addEventListener('click', () => {
+                console.log('Hitbox leopard diklik!');
+
+                if (!clicked) {
+                    clicked = true;
+                    ucapanText.setAttribute('value', 'Selamat Ulang Tahun!');
+                    ucapanText.setAttribute('visible', 'true');
+                } else {
+                    window.location.href = 'ucapan1.html';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

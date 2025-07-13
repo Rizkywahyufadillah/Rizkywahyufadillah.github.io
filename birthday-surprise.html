@@ -4,68 +4,49 @@
 <head>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
 </head>
 
 <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs renderer="logarithmicDepthBuffer: true;">
+    <a-scene embedded arjs cursor="rayOrigin: mouse" raycaster="objects: .clickable">
+
         <!-- Marker -->
-        <a-marker preset="hiro" id="hiro-marker">
-            <!-- Leopard -->
-            <a-entity id="leopard" class="clickable" gltf-model="url(assets/leopard_animation_run.glb)"
-                scale="0.05 0.05 0.05" position="0 0.5 0" rotation="90 -90 90" animation-mixer
-                data-role="clickable-object">
-                <!-- Bounding box helper (tidak terlihat di produksi) -->
-                <a-box visible="false" width="2" height="2" depth="2" wireframe="true" color="red"></a-box>
+        <a-marker preset="hiro">
+
+            <!-- Model Leopard -->
+            <a-entity id="leopard-model" gltf-model="url(assets/leopard_animation_run.glb)" scale="0.05 0.05 0.05"
+                position="0 0.5 0" rotation="90 -90 90" animation-mixer>
             </a-entity>
 
-            <!-- Dragon -->
-            <a-entity gltf-model="url(assets/animated_dragon_three_motion_loops.glb)" position="3 0 0"
-                scale="0.5 0.5 0.5" rotation="0 180 0">
-            </a-entity>
+            <!-- Hitbox transparan (posisi sama seperti leopard) -->
+            <a-box id="leopard-hitbox" position="0 1 0" width="1" height="2" depth="1"
+                material="opacity: 0; transparent: true" class="clickable">
+            </a-box>
 
             <!-- Teks ucapan -->
-            <a-text id="ucapan-text" value="" position="0 1.5 0" align="center" color="yellow" width="4"
-                visible="false">
+            <a-text id="ucapan-text" value="" position="0 2 0" align="center" color="yellow" width="4" visible="false">
             </a-text>
+
         </a-marker>
 
         <!-- Kamera -->
-        <a-entity camera look-controls>
-            <a-cursor fuse="true" fuse-timeout="1000"
-                raycaster="objects: [data-role=clickable-object], .clickable; far: 20; interval: 100"
-                cursor="rayOrigin: mouse">
-            </a-cursor>
-        </a-entity>
+        <a-entity camera></a-entity>
     </a-scene>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const leopard = document.querySelector('#leopard');
+            const hitbox = document.querySelector('#leopard-hitbox');
             const ucapanText = document.querySelector('#ucapan-text');
-            let alreadyClicked = false;
+            let clicked = false;
 
-            leopard.addEventListener('click', (e) => {
-                e.stopPropagation();
+            hitbox.addEventListener('click', () => {
+                console.log('Hitbox leopard diklik!');
 
-                // Pertama kali diklik → tampilkan teks
-                if (!alreadyClicked) {
-                    alreadyClicked = true;
-
+                if (!clicked) {
+                    clicked = true;
                     ucapanText.setAttribute('value', 'Selamat Ulang Tahun!');
                     ucapanText.setAttribute('visible', 'true');
-
-                    // Animasi skala membesar
-                    // leopard.setAttribute('scale', '0.35 0.35 0.35');
-                    setTimeout(() => {
-                        // leopard.setAttribute('scale', '0.3 0.3 0.3');
-                    }, 300);
                 } else {
-                    // Klik kedua → pindah halaman
-                    // leopard.setAttribute('scale', '0.35 0.35 0.35');
-                    setTimeout(() => {
-                        window.location.href = 'ucapan1.html';
-                    }, 300);
+                    window.location.href = 'ucapan1.html';
                 }
             });
         });
