@@ -2,24 +2,99 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
+    <title>AR Development Mode</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
 
 <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs>
-        <a-marker preset="hiro">
-            <!-- Model hati -->
-            <a-entity gltf-model="url(assets/heart.glb)" scale="1 1 1" position="0 0 0" rotation="0 180 0">
+
+    <script>
+        // ✅ Ganti ke false jika ingin aktifkan AR marker (produksi)
+        const devMode = true;
+    </script>
+
+    <a-scene embedded renderer="logarithmicDepthBuffer: true;" vr-mode-ui="enabled: false;" arjs="sourceType: webcam;"
+        cursor="rayOrigin: mouse" raycaster="objects: .clickable">
+
+        <!-- Dev mode (tanpa marker) -->
+        <a-entity id="content-dev" visible="false" position="0 0 0">
+            <a-entity id="leopard" class="clickable" gltf-model="url(assets/leopard_animation_run.glb)"
+                scale="0.05 0.05 0.05" position="0 0.5 0" rotation="90 -90 90" animation-mixer>
             </a-entity>
 
-            <!-- Teks ucapan -->
-            <a-text value="Selamat Ulang Tahun, Sayang!" position="0 1 0" align="center" color="red" scale="2 2 2">
+            <a-box id="leopard-hitbox" position="0 1 0" width="1" height="2" depth="1" color="red"
+                material="opacity: 0.5; transparent: true" class="clickable">
+            </a-box>
+
+            <a-entity gltf-model="url(assets/animated_dragon_three_motion_loops.glb)" position="3 0 0"
+                scale="0.5 0.5 0.5" rotation="0 180 0">
+            </a-entity>
+
+            <a-text id="ucapan-text-dev" value="" position="0 2 0" align="center" color="yellow" width="4"
+                visible="false">
+            </a-text>
+        </a-entity>
+
+        <!-- AR Mode (dengan marker) -->
+        <a-marker id="marker-hiro" preset="hiro" visible="false">
+            <a-entity id="leopard-ar" class="clickable" gltf-model="url(assets/leopard_animation_run.glb)"
+                scale="0.05 0.05 0.05" position="0 0.5 0" rotation="90 -90 90" animation-mixer>
+            </a-entity>
+
+            <a-box id="leopard-hitbox-ar" position="0 1 0" width="1" height="2" depth="1" color="red"
+                material="opacity: 0.5; transparent: true" class="clickable">
+            </a-box>
+
+            <a-entity gltf-model="url(assets/animated_dragon_three_motion_loops.glb)" position="3 0 0"
+                scale="0.5 0.5 0.5" rotation="0 180 0">
+            </a-entity>
+
+            <a-text id="ucapan-text-ar" value="" position="0 2 0" align="center" color="yellow" width="4"
+                visible="false">
             </a-text>
         </a-marker>
 
+        <!-- Kamera -->
         <a-entity camera></a-entity>
     </a-scene>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentDev = document.querySelector('#content-dev');
+            const contentAR = document.querySelector('#marker-hiro');
+
+            // Tampilkan konten berdasarkan devMode
+            if (devMode) {
+                contentDev.setAttribute('visible', true);
+                contentAR.setAttribute('visible', false);
+                setupClick('#leopard-hitbox', '#ucapan-text-dev');
+            } else {
+                contentDev.setAttribute('visible', false);
+                contentAR.setAttribute('visible', true);
+                setupClick('#leopard-hitbox-ar', '#ucapan-text-ar');
+            }
+
+            function setupClick(hitboxSelector, textSelector) {
+                const hitbox = document.querySelector(hitboxSelector);
+                const ucapanText = document.querySelector(textSelector);
+                let clicked = false;
+
+                hitbox.addEventListener('click', () => {
+                    console.log('Leopard diklik!');
+
+                    if (!clicked) {
+                        clicked = true;
+                        ucapanText.setAttribute('value', 'Selamat Ulang Tahun!');
+                        ucapanText.setAttribute('visible', 'true');
+                    } else {
+                        window.location.href = 'ucapan1.html';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
